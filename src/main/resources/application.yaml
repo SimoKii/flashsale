@@ -1,0 +1,9 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: flashsale
+
+flashsale:
+  instance-id: ${INSTANCE_ID:local}

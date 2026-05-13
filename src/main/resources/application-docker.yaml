@@ -6,3 +6,10 @@ spring:
       sentinel:
         master: ${REDIS_MASTER_NAME:mymaster}
         nodes: ${REDIS_SENTINEL_NODES:redis-sentinel-1:26379,redis-sentinel-2:26379,redis-sentinel-3:26379}
+      timeout: 500ms
+      lettuce:
+        pool:
+          max-active: 8
+          max-idle: 4
+          min-idle: 1
+          max-wait: 200ms

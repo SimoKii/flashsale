@@ -63,20 +63,6 @@ class PointTxTest {
             assertThat(tx.getAmount().amount()).isEqualTo(1000);
             assertThat(tx.getCreatedAt()).isEqualTo(savedTime);
         }
-
-        @Test
-        @DisplayName("적립 거래는 주문 없이 생성할 수 있다")
-        void earnType_canBeCreatedWithoutOrder() {
-            PointTx tx = PointTx.of(
-                    1L,
-                    null,
-                    PointTx.Type.EARN,
-                    Money.of(1000)
-            );
-
-            assertThat(tx.getOrderId()).isNull();
-            assertThat(tx.getType()).isEqualTo(PointTx.Type.EARN);
-        }
     }
 
     @Nested

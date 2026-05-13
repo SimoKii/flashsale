@@ -1,6 +1,6 @@
 -- KEYS[1] = stock:product:{id}
 -- KEYS[2] = holders:product:{id}
--- KEYS[3] = processed:product:{id}
+-- KEYS[3] = ticket_processed:product:{id}
 -- ARGV[1] = ticketId
 -- ARGV[2] = userId
 -- ARGV[3] = now (epoch seconds)

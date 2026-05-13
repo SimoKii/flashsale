@@ -66,7 +66,7 @@ public class Stock {
 
     public void reserve() {
         if (!canReserve()) {
-            throw new DomainException("Stock exhausted for product: " + productId);
+            throw new StockExhaustedException(productId);
         }
         reserved++;
     }

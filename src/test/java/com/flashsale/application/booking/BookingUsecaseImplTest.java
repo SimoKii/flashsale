@@ -76,7 +76,8 @@ class BookingUsecaseImplTest {
                         PaymentMethodCode.CREDIT_CARD,
                         10_000L,
                         "1234-5678",
-                        "pay-idem-001"
+                        "pay-idem-001",
+                        null
                 ))
         );
     }

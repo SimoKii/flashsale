@@ -99,7 +99,8 @@ class PaymentOrchestratorImplTest {
                 PaymentMethodCode.YPOINT,
                 amount,
                 null,
-                idempotencyKey
+                idempotencyKey,
+                1L
         );
     }
 
@@ -112,7 +113,8 @@ class PaymentOrchestratorImplTest {
                 PaymentMethodCode.CREDIT_CARD,
                 amount,
                 "4111111111111111",
-                idempotencyKey
+                idempotencyKey,
+                null
         );
     }
 

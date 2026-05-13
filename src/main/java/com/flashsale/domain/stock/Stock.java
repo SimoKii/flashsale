@@ -60,8 +60,12 @@ public class Stock {
         );
     }
 
+    public boolean canReserve() {
+        return sold + reserved < total;
+    }
+
     public void reserve() {
-        if (sold + reserved >= total) {
+        if (!canReserve()) {
             throw new DomainException("Stock exhausted for product: " + productId);
         }
         reserved++;

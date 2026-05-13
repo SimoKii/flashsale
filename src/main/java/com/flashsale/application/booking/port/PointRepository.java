@@ -12,4 +12,6 @@ public interface PointRepository {
     PointAccount save(final PointAccount account);
 
     PointTx saveTx(final PointTx tx);
+
+    boolean existsByIdempotencyKey(final String idempotencyKey);
 }

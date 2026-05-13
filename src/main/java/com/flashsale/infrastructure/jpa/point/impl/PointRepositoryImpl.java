@@ -51,4 +51,15 @@ public class PointRepositoryImpl implements PointRepository {
     ) {
         return pointTxJpaRepository.save(PointTxJpaEntity.from(tx)).toDomain();
     }
+
+    @Override
+    @Transactional(readOnly = true)
+    public boolean existsByIdempotencyKey(
+            final String idempotencyKey
+    ) {
+        if (idempotencyKey == null) {
+            return false;
+        }
+        return pointTxJpaRepository.existsByIdempotencyKey(idempotencyKey);
+    }
 }

@@ -11,12 +11,19 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "point_tx")
+@Table(
+        name = "point_tx",
+        uniqueConstraints = @UniqueConstraint(
+                name = "uq_point_tx_idempotency_key",
+                columnNames = "idempotency_key"
+        )
+)
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class PointTxJpaEntity extends BaseJpaEntity {
@@ -38,6 +45,9 @@ public class PointTxJpaEntity extends BaseJpaEntity {
     @Column(nullable = false)
     private long amount;
 
+    @Column(name = "idempotency_key", length = 100)
+    private String idempotencyKey;
+
     public static PointTxJpaEntity from(
             final PointTx tx
     ) {
@@ -46,6 +56,7 @@ public class PointTxJpaEntity extends BaseJpaEntity {
         entity.orderId = tx.getOrderId();
         entity.type = tx.getType();
         entity.amount = tx.getAmount().amount();
+        entity.idempotencyKey = tx.getIdempotencyKey();
         return entity;
     }
 
@@ -56,6 +67,7 @@ public class PointTxJpaEntity extends BaseJpaEntity {
                 orderId,
                 type,
                 Money.of(amount),
+                idempotencyKey,
                 getCreatedAt()
         );
     }

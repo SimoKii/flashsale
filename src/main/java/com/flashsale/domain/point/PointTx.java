@@ -17,6 +17,7 @@ public class PointTx {
     private final Long orderId;
     private final Type type;
     private final Money amount;
+    private final String idempotencyKey;
     private final LocalDateTime createdAt;
 
     private PointTx(
@@ -25,6 +26,7 @@ public class PointTx {
             final Long orderId,
             final Type type,
             final Money amount,
+            final String idempotencyKey,
             final LocalDateTime createdAt
     ) {
         Objects.requireNonNull(type, "type must not be null");
@@ -35,7 +37,26 @@ public class PointTx {
         this.orderId = orderId;
         this.type = type;
         this.amount = amount;
+        this.idempotencyKey = idempotencyKey;
         this.createdAt = createdAt;
+    }
+
+    public static PointTx of(
+            final long userId,
+            final Long orderId,
+            final Type type,
+            final Money amount,
+            final String idempotencyKey
+    ) {
+        return new PointTx(
+                null,
+                userId,
+                orderId,
+                type,
+                amount,
+                idempotencyKey,
+                LocalDateTime.now()
+        );
     }
 
     public static PointTx of(
@@ -44,14 +65,7 @@ public class PointTx {
             final Type type,
             final Money amount
     ) {
-        return new PointTx(
-                null,
-                userId,
-                orderId,
-                type,
-                amount,
-                LocalDateTime.now()
-        );
+        return of(userId, orderId, type, amount, null);
     }
 
     public static PointTx restore(
@@ -68,6 +82,27 @@ public class PointTx {
                 orderId,
                 type,
                 amount,
+                null,
+                createdAt
+        );
+    }
+
+    public static PointTx restore(
+            final Long id,
+            final long userId,
+            final Long orderId,
+            final Type type,
+            final Money amount,
+            final String idempotencyKey,
+            final LocalDateTime createdAt
+    ) {
+        return new PointTx(
+                id,
+                userId,
+                orderId,
+                type,
+                amount,
+                idempotencyKey,
                 createdAt
         );
     }

@@ -1,9 +1,8 @@
-server:
-  port: 8080
-
 spring:
-  application:
-    name: flashsale
-
-flashsale:
-  instance-id: ${INSTANCE_ID:local}
+  datasource:
+    url: jdbc:mysql://${DB_HOST}:3306/flashsale?serverTimezone=UTC&characterEncoding=UTF-8&useSSL=false&allowPublicKeyRetrieval=true
+  data:
+    redis:
+      sentinel:
+        master: ${REDIS_MASTER_NAME:mymaster}
+        nodes: ${REDIS_SENTINEL_NODES:redis-sentinel-1:26379,redis-sentinel-2:26379,redis-sentinel-3:26379}

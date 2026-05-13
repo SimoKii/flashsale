@@ -4,6 +4,19 @@ server:
 spring:
   application:
     name: flashsale
+  datasource:
+    url: jdbc:mysql://${DB_HOST:localhost}:3306/flashsale?serverTimezone=UTC&characterEncoding=UTF-8&useSSL=false&allowPublicKeyRetrieval=true
+    username: flashsale
+    password: flashsalepw
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    open-in-view: false
+    show-sql: false
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
 
 flashsale:
   instance-id: ${INSTANCE_ID:local}

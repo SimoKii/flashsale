@@ -1,6 +1,5 @@
 package com.flashsale.infrastructure.jpa.stock;
 
-import com.flashsale.application.booking.port.StockPort;
 import com.flashsale.common.exception.DomainException;
 import com.flashsale.infrastructure.jpa.stock.impl.DatabaseStockAdapter;
 import org.junit.jupiter.api.BeforeEach;
@@ -52,7 +51,7 @@ class DatabaseStockAdapterTest {
     }
 
     @Autowired
-    StockPort stockPort;
+    DatabaseStockAdapter stockPort;
 
     @Autowired
     StockJpaRepository stockJpaRepository;
@@ -181,7 +180,7 @@ class DatabaseStockAdapterTest {
             stockPort.reserve(PRODUCT_ID, "ticket-r01", 1L);
             stockPort.reserve(PRODUCT_ID, "ticket-r02", 2L);
 
-            stockPort.restore(PRODUCT_ID, "ticket-r01");
+            stockPort.restore(PRODUCT_ID, "ticket-r01", 1L);
 
             assertThat(stockJpaRepository.findByProductId(PRODUCT_ID).orElseThrow().getReserved()).isEqualTo(1);
         }
@@ -191,7 +190,7 @@ class DatabaseStockAdapterTest {
         void restore_increasesRemaining() {
             stockPort.reserve(PRODUCT_ID, "ticket-r03", 1L);
 
-            stockPort.restore(PRODUCT_ID, "ticket-r03");
+            stockPort.restore(PRODUCT_ID, "ticket-r03", 1L);
 
             assertThat(stockPort.remaining(PRODUCT_ID)).isEqualTo(10);
         }
@@ -199,7 +198,7 @@ class DatabaseStockAdapterTest {
         @Test
         @DisplayName("점유가 없는 상태에서 취소하면 예외가 발생한다")
         void noReservation_throwsException() {
-            assertThatThrownBy(() -> stockPort.restore(PRODUCT_ID, "ticket-none"))
+            assertThatThrownBy(() -> stockPort.restore(PRODUCT_ID, "ticket-none", 999L))
                     .isInstanceOf(DomainException.class).hasMessageContaining("Nothing to restore");
         }
     }

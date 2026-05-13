@@ -8,17 +8,30 @@ public interface StockPort {
      * @param ticketId 큐 티켓 ID — Redis 어댑터에서 중복 점유 방지에 사용
      * @param userId   사용자 ID — Redis 어댑터에서 holders 관리에 사용
      */
-    int reserve(final Long productId, final String ticketId, final Long userId);
+    int reserve(
+            final Long productId,
+            final String ticketId,
+            final Long userId
+    );
 
     /**
      * 점유 취소 (결제 실패·만료 시).
+     *
+     * @param userId Redis 경로: holders ZREM에 사용. DB fallback 경로: 무시.
      */
-    void restore(final Long productId, final String ticketId);
+    void restore(
+            final Long productId,
+            final String ticketId,
+            final Long userId
+    );
 
     /**
      * 점유 → 판매 확정 (결제 성공 시).
      */
-    void confirm(final Long productId, final String ticketId);
+    void confirm(
+            final Long productId,
+            final String ticketId
+    );
 
     /**
      * 현재 잔여 재고.

@@ -36,7 +36,8 @@ public class DatabaseStockAdapter implements StockPort {
     @Transactional
     public void restore(
             final Long productId,
-            final String ticketId
+            final String ticketId,
+            final Long userId
     ) {
         StockJpaEntity entity = findWithLock(productId);
         Stock stock = entity.toDomain();

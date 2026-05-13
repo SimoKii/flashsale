@@ -10,6 +10,9 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingRequestHeaderException;
+import org.springframework.web.bind.MissingServletRequestParameterException;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -56,6 +59,24 @@ public class GlobalExceptionHandler {
                 .orElse("Validation failed");
         return ResponseEntity.badRequest()
                 .body(CommonResponseDto.error("VALIDATION_ERROR", message));
+    }
+
+    @ExceptionHandler(MissingRequestHeaderException.class)
+    public ResponseEntity<CommonResponseDto<Void>> handleMissingHeader(final MissingRequestHeaderException e) {
+        return ResponseEntity.badRequest()
+                .body(CommonResponseDto.error("MISSING_HEADER", "필수 헤더가 누락되었습니다"));
+    }
+
+    @ExceptionHandler(MissingServletRequestParameterException.class)
+    public ResponseEntity<CommonResponseDto<Void>> handleMissingParameter(final MissingServletRequestParameterException e) {
+        return ResponseEntity.badRequest()
+                .body(CommonResponseDto.error("MISSING_PARAMETER", "필수 파라미터가 누락되었습니다"));
+    }
+
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    public ResponseEntity<CommonResponseDto<Void>> handleTypeMismatch(final MethodArgumentTypeMismatchException e) {
+        return ResponseEntity.badRequest()
+                .body(CommonResponseDto.error("INVALID_PARAMETER_TYPE", "파라미터 형식이 올바르지 않습니다"));
     }
 
     @ExceptionHandler(Exception.class)

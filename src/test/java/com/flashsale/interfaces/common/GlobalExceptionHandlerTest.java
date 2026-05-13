@@ -10,8 +10,6 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -22,26 +20,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest
+@WebMvcTest(controllers = {GlobalExceptionHandlerTest.TestController.class, GlobalExceptionHandler.class})
 @DisplayName("GlobalExceptionHandler")
 class GlobalExceptionHandlerTest {
 
     @Autowired
     private MockMvc mockMvc;
-
-    @Configuration
-    static class TestConfig {
-
-        @Bean
-        GlobalExceptionHandler globalExceptionHandler() {
-            return new GlobalExceptionHandler();
-        }
-
-        @Bean
-        TestController testController() {
-            return new TestController();
-        }
-    }
 
     @RestController
     static class TestController {

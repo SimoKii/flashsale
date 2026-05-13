@@ -16,8 +16,8 @@ import com.flashsale.domain.order.IdempotencyKey;
 import com.flashsale.domain.order.Order;
 import com.flashsale.domain.order.PaymentLine;
 import com.flashsale.domain.shared.Money;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -31,7 +31,6 @@ import java.util.Optional;
 
 @Slf4j
 @Component
-@RequiredArgsConstructor
 public class BookingWorker {
 
     private static final String CONSUMER_GROUP = "booking-worker";
@@ -50,6 +49,30 @@ public class BookingWorker {
     private final BookingResultStore bookingResultStore;
     private final UserEntryGuardPort userEntryGuardPort;
     private final ObjectMapper objectMapper;
+
+    public BookingWorker(
+            final BookingQueuePort bookingQueuePort,
+            final KillSwitchPort killSwitchPort,
+            final OrderRepository orderRepository,
+            final ProductRepository productRepository,
+            @Qualifier("redisStockAdapter") final StockPort stockPort,
+            final PaymentLineRepository paymentLineRepository,
+            final PaymentOrchestrator paymentOrchestrator,
+            final BookingResultStore bookingResultStore,
+            final UserEntryGuardPort userEntryGuardPort,
+            final ObjectMapper objectMapper
+    ) {
+        this.bookingQueuePort = bookingQueuePort;
+        this.killSwitchPort = killSwitchPort;
+        this.orderRepository = orderRepository;
+        this.productRepository = productRepository;
+        this.stockPort = stockPort;
+        this.paymentLineRepository = paymentLineRepository;
+        this.paymentOrchestrator = paymentOrchestrator;
+        this.bookingResultStore = bookingResultStore;
+        this.userEntryGuardPort = userEntryGuardPort;
+        this.objectMapper = objectMapper;
+    }
 
     @Value("${flashsale.instance-id:default}")
     private String instanceId;

@@ -26,13 +26,12 @@ public class YPointGateway implements PaymentGateway {
             final PaymentLineCommand cmd
     ) {
         try {
-            long userId = extractUserId(cmd);
             pointService.deduct(
-                    userId,
+                    cmd.userId(),
                     cmd.amount(),
                     cmd.idempotencyKey()
             );
-            String pgTxId = "point:" + userId + ":" + cmd.amount();
+            String pgTxId = "point:" + cmd.userId() + ":" + cmd.amount();
             return new PaymentResult.Success(pgTxId);
         } catch (Exception e) {
             log.warn("Point deduction failed: {}", e.getMessage());
@@ -69,9 +68,5 @@ public class YPointGateway implements PaymentGateway {
         return new PaymentResult.Success(idempotencyKey);
     }
 
-    private long extractUserId(
-            final PaymentLineCommand cmd
-    ) {
-        return Long.parseLong(cmd.cardNumber());
-    }
+
 }

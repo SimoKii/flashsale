@@ -45,7 +45,8 @@ public class BookingController {
                                 PaymentMethodCode.valueOf(l.method()),
                                 l.amount(),
                                 l.cardNumber(),
-                                l.idempotencyKey()
+                                l.idempotencyKey(),
+                                userId
                         ))
                         .toList()
         );

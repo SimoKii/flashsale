@@ -9,7 +9,8 @@ public record PaymentLineCommand(
         PaymentMethodCode method,
         long amount,
         String cardNumber,
-        String idempotencyKey
+        String idempotencyKey,
+        Long userId
 ) {
     public PaymentLineCommand {
         Objects.requireNonNull(method, "method must not be null");

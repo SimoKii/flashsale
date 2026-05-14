@@ -118,7 +118,7 @@ src/main/java/com/flashsale/
 
 src/main/resources/
 ├── db/migration/             # Flyway
-└── lua/                      # atomic_reserve.lua, atomic_restore.lua
+└── redis/                      # atomic_reserve.lua, atomic_restore.lua
 
 infra/                        # Docker, Nginx, Sentinel 설정
 ```

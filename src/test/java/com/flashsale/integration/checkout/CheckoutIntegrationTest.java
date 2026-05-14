@@ -26,7 +26,7 @@ class CheckoutIntegrationTest extends IntegrationTestBase {
     @BeforeEach
     void resetCheckoutState() {
         truncateTables();
-        jdbcTemplate.update("UPDATE stock SET sold = 0, reserved = 0 WHERE product_id = ?", EXISTING_PRODUCT_ID);
+        jdbcTemplate.update("UPDATE stock SET total = 10, sold = 0, reserved = 0 WHERE product_id = ?", EXISTING_PRODUCT_ID);
         jdbcTemplate.update("UPDATE point_account SET balance = 100000");
     }
 

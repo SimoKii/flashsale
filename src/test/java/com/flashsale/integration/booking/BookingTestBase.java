@@ -42,7 +42,7 @@ public abstract class BookingTestBase extends IntegrationTestBase {
         });
 
         truncateTables();
-        jdbcTemplate.update("UPDATE stock SET sold = 0, reserved = 0 WHERE product_id = ?", PRODUCT_ID);
+        jdbcTemplate.update("UPDATE stock SET total = " + INITIAL_STOCK + ", sold = 0, reserved = 0 WHERE product_id = ?", PRODUCT_ID);
         jdbcTemplate.update("UPDATE point_account SET balance = 100000");
     }
 

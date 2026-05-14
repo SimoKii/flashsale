@@ -15,6 +15,7 @@ import com.flashsale.application.booking.port.UserEntryGuardPort;
 import com.flashsale.domain.order.IdempotencyKey;
 import com.flashsale.domain.order.Order;
 import com.flashsale.domain.order.PaymentLine;
+import com.flashsale.domain.order.PaymentLineStatus;
 import com.flashsale.domain.shared.Money;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -188,7 +189,7 @@ public class BookingWorker {
 
             List<PaymentLineCommand> commands = parsePaymentLines(fields.get("paymentLines"));
             for (PaymentLineCommand cmd : commands) {
-                PaymentLine line = PaymentLine.of(cmd.method(), Money.of(cmd.amount()));
+                PaymentLine line = PaymentLine.restore(null, cmd.method(), Money.of(cmd.amount()), PaymentLineStatus.REQUESTED, null, cmd.sequence());
                 PaymentLine saved = paymentLineRepository.save(line, savedOrder.getId());
                 savedOrder.addPaymentLine(saved);
             }

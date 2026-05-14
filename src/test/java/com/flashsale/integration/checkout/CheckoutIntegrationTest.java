@@ -1,31 +1,21 @@
 package com.flashsale.integration.checkout;
 
+import com.flashsale.integration.IntegrationTestBase;
 import com.jayway.jsonpath.JsonPath;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.test.context.DynamicPropertyRegistry;
-import org.springframework.test.context.DynamicPropertySource;
-import org.testcontainers.containers.GenericContainer;
-import org.testcontainers.containers.MySQLContainer;
-import org.testcontainers.junit.jupiter.Container;
-import org.testcontainers.junit.jupiter.Testcontainers;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@Testcontainers
 @DisplayName("Checkout API 통합 테스트")
-class CheckoutIntegrationTest {
+class CheckoutIntegrationTest extends IntegrationTestBase {
 
     private static final long EXISTING_PRODUCT_ID = 1L;
     private static final long EXISTING_USER_ID = 1L;
@@ -33,32 +23,12 @@ class CheckoutIntegrationTest {
     private static final int EXISTING_PRODUCT_STOCK = 10;
     private static final long UNKNOWN_PRODUCT_ID = 999_999L;
 
-    @Container
-    static MySQLContainer<?> mysql = new MySQLContainer<>("mysql:8.0")
-            .withDatabaseName("flashsale")
-            .withUsername("flashsale")
-            .withPassword("flashsalepw");
-
-    @Container
-    static GenericContainer<?> redis = new GenericContainer<>("redis:7-alpine")
-            .withExposedPorts(6379);
-
-    @DynamicPropertySource
-    static void properties(
-            final DynamicPropertyRegistry registry
-    ) {
-        registry.add("spring.datasource.url", mysql::getJdbcUrl);
-        registry.add("spring.datasource.username", mysql::getUsername);
-        registry.add("spring.datasource.password", mysql::getPassword);
-        registry.add("spring.data.redis.host", redis::getHost);
-        registry.add("spring.data.redis.port", () -> redis.getMappedPort(6379));
+    @BeforeEach
+    void resetCheckoutState() {
+        truncateTables();
+        jdbcTemplate.update("UPDATE stock SET sold = 0, reserved = 0 WHERE product_id = ?", EXISTING_PRODUCT_ID);
+        jdbcTemplate.update("UPDATE point_account SET balance = 100000");
     }
-
-    @LocalServerPort
-    int port;
-
-    @Autowired
-    TestRestTemplate restTemplate;
 
     private String baseUrl() {
         return "http://localhost:" + port + "/api/v1/checkout";
